@@ -52,16 +52,18 @@ jobs:
           python <<EOF
           import json
           metrics = json.load(open("metrics.json"))
-          f1 = metrics["f1_score"]
+
+          r2 = metrics["R2"]
           best = float("${{ vars.BEST_F1_SCORE }}")
 
-          print("Current F1:", f1)
-          print("Best F1:", best)
+          print("Current R2:", r2)
+          print("Best R2:", best)
 
-          if f1 <= best:
+          if r2 <= best:
               print("${{ github.actor }} ---- Metric did not improve")
               exit(0)
           EOF
+
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
