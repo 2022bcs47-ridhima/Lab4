@@ -33,3 +33,32 @@ jobs:
           path: |
             trained_model.pkl
             metrics.json
+        
+  deploy:
+    needs: train
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download model artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: model-files
+
+      - name: Read metrics
+        id: metrics
+        run: |
+          echo "F1_SCORE=$(python -c "import json; print(json.load(open('metrics.json'))['f1_score'])")" >> $GITHUB_ENV
+          echo "MSE=$(python -c "import json; print(json.load(open('metrics.json'))['mse'])")" >> $GITHUB_ENV
+
+      - name: Compare metrics
+        run: |
+          echo "Current F1: $F1_SCORE"
+          echo "Best F1: ${{ vars.BEST_F1_SCORE }}"
+
+          if (( $(echo "$F1_SCORE <= ${{ vars.BEST_F1_SCORE }}" | bc -l) )); then
+            echo "${{ github.actor }} ---- Metric did not improve"
+            exit 0
+          fi
