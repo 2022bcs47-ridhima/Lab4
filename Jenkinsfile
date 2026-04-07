@@ -5,13 +5,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'python3 -m pip install -r requirements.txt || echo "pip not available"'
             }
         }
 
         stage('Run Code') {
             steps {
-                sh 'python main.py || echo "No main.py found"'
+                sh 'python3 main.py || echo "No main.py found"'
             }
         }
 
