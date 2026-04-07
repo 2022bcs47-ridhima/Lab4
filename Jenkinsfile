@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Clone Repo') {
-            steps {
-                git 'https://github.com/2022bcs47-ridhima/Lab4.git'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 sh 'pip install -r requirements.txt'
