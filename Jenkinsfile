@@ -30,7 +30,7 @@ pipeline {
         stage('Print Details') {
             steps {
                 echo "Name: Ridhima"
-                echo "Roll No: YOUR_ROLLNO"
+                echo "Roll No: 2022BCS0047"
             }
         }
     }
