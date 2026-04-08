@@ -30,7 +30,7 @@ pipeline {
                 echo "Waiting for API to be ready..."
                 sh """
                     for i in \$(seq 1 15); do
-                        STATUS=\$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${API_PORT}/docs || true)
+                        STATUS=\$(curl -s -o /dev/null -w "%{http_code}" http://172.17.0.1:${API_PORT}/docs || true)
                         if [ "\$STATUS" = "200" ]; then
                             echo "API is ready!"
                             exit 0
@@ -48,12 +48,12 @@ pipeline {
             steps {
                 echo "Sending valid wine inference request..."
                 sh """
-                    RESPONSE=\$(curl -s -X POST http://localhost:${API_PORT}/predict \
+                    RESPONSE=\$(curl -s -X POST http://172.17.0.1:${API_PORT}/predict \
                         -H "Content-Type: application/json" \
                         -d '{"features": [7.4, 0.70, 0.00, 1.9, 0.076, 11.0, 34.0, 0.9978, 3.51, 0.56, 9.4]}')
                     echo "Response: \$RESPONSE"
 
-                    HTTP_CODE=\$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:${API_PORT}/predict \
+                    HTTP_CODE=\$(curl -s -o /dev/null -w "%{http_code}" -X POST http://172.17.0.1:${API_PORT}/predict \
                         -H "Content-Type: application/json" \
                         -d '{"features": [7.4, 0.70, 0.00, 1.9, 0.076, 11.0, 34.0, 0.9978, 3.51, 0.56, 9.4]}')
                     echo "HTTP Status: \$HTTP_CODE"
@@ -73,7 +73,7 @@ pipeline {
             steps {
                 echo "Sending invalid inference request..."
                 sh """
-                    HTTP_CODE=\$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:${API_PORT}/predict \
+                    HTTP_CODE=\$(curl -s -o /dev/null -w "%{http_code}" -X POST http://172.17.0.1:${API_PORT}/predict \
                         -H "Content-Type: application/json" \
                         -d '{"bad_field": "invalid_data"}')
                     echo "HTTP Code for invalid request: \$HTTP_CODE"
