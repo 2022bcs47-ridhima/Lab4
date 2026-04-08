@@ -63,7 +63,7 @@ pipeline {
                         exit 1
                     fi
 
-                    echo "\$RESPONSE" | grep -q "prediction" || { echo "FAIL: No prediction field in response"; exit 1; }
+                    echo "\$RESPONSE" | grep -q "predicted_wine_quality" || { echo "FAIL: No prediction field in response"; exit 1; }
                     echo "PASS: Valid inference request succeeded!"
                 """
             }
